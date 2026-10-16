@@ -3,404 +3,1134 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d18">
+<meta name="description" content="KVAN SCRIPT - Discover, view and copy Roblox scripts.">
 <title>KVAN SCRIPT</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{color-scheme:dark;--bg:#080d18;--panel:#111a2b;--line:#263650;--blue:#3984ff;--muted:#a6b5cb}
-*{box-sizing:border-box}
-body{margin:0;padding-bottom:84px;background:var(--bg);color:#f4f7ff;font-family:Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:#0d1628;border-bottom:1px solid var(--line)}
-.logo{font-size:clamp(20px,4vw,29px);font-weight:900;letter-spacing:1px}
-.logo span{color:#4c91ff}
-.tagline,.muted{color:var(--muted);font-size:13px}
-.owner{display:flex;flex-direction:column;align-items:center;min-width:92px;padding:6px 10px;border:1px solid var(--line);border-radius:12px;background:#111a2b;color:white;cursor:pointer}
-.person{font-size:25px;line-height:1.1}
-.creator{font-size:12px}
-.kvan{font-weight:900;font-size:14px;letter-spacing:1px}
-main{max-width:1100px;margin:auto;padding:18px 14px}
-input,textarea,button{font:inherit;border-radius:9px;padding:11px;border:1px solid var(--line)}
-input,textarea{background:#0b1322;color:white;width:100%;min-width:0}
-button{cursor:pointer;background:var(--blue);border:0;color:white;font-weight:bold}
-.secondary{background:#24334b!important}
-.danger{background:#b93249!important}
-.searchbar,.actions{display:flex;gap:8px;flex-wrap:wrap}
-.searchbar{margin-bottom:18px}
-.searchbar input{flex:1}
-.actions{margin-top:12px}
-.actions button{flex:1;min-width:90px}
-.panel,.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.panel{padding:16px;margin:16px 0}
-.hidden{display:none!important}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-textarea{min-height:120px}
-.full{grid-column:1/-1}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 0 12px}
-.section-title h2{font-size:20px;margin:0}
-.section-title span{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:13px}
-.thumb{height:145px;width:100%;object-fit:cover;display:block;background:#17243a}
-.cardbody{padding:13px}
-.tag{display:inline-block;background:#1b3152;color:#9cc4ff;padding:5px 8px;border-radius:6px;font-size:12px}
-h3{overflow-wrap:anywhere;margin:10px 0 7px}
-.time{color:#93a9c8;font-size:12px;margin-top:7px}
-.code{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;background:#080d18;padding:10px;border-radius:8px}
-#status{color:#9cc4ff;overflow-wrap:anywhere}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:7px 4px calc(7px + env(safe-area-inset-bottom));background:#0d1628;border-top:1px solid var(--line)}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:transparent;color:#a6b5cb;padding:7px 2px;font-size:11px}
-.nav-btn .ico{font-size:19px}
-.nav-btn.active{background:#1b3152;color:white}
-.socials,.profile-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px}
-.social-link{background:#17243a;padding:12px;border-radius:9px;text-align:center;color:#dbe8ff;text-decoration:none}
-footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
-@media(max-width:520px){header{padding:11px}.fields{grid-template-columns:1fr}.full{grid-column:auto}.searchbar{flex-direction:column}.section-title h2{font-size:18px}}
+:root {
+  color-scheme: dark;
+  --bg: #080d18;
+  --panel: #111a2b;
+  --panel2: #0d1628;
+  --line: #263650;
+  --blue: #3984ff;
+  --text: #f4f7ff;
+  --muted: #a6b5cb;
+  --danger: #ff647c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding-bottom: 84px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  background: rgba(13,22,40,.97);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  font-size: clamp(21px,4vw,29px);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.logo span { color: #4c91ff; }
+
+.tagline {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.owner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 88px;
+  padding: 7px 10px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.owner:hover { border-color: var(--blue); }
+
+.owner .creator { font-size: 11px; color: var(--muted); }
+.owner .kvan { font-size: 14px; font-weight: 900; letter-spacing: 1px; }
+
+main {
+  max-width: 1050px;
+  margin: auto;
+  padding: 18px 14px;
+}
+
+.hidden { display: none !important; }
+
+input, textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  color: var(--text);
+  background: #0a1220;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--blue);
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+}
+
+.btn:hover { filter: brightness(1.1); }
+
+.btn-secondary {
+  background: #1a2940;
+  border-color: var(--line);
+}
+
+.btn-danger { background: #a92f45; }
+
+.searchbar {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 20px;
+}
+
+.searchbar input { flex: 1; }
+
+.panel, .card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+
+.panel {
+  padding: 16px;
+  margin: 15px 0;
+}
+
+.panel h2 { margin-top: 0; }
+
+.muted { color: var(--muted); font-size: 13px; }
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.full { grid-column: 1 / -1; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.actions .btn { flex: 1; }
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 26px 0 13px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.section-title span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(225px,1fr));
+  gap: 13px;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  background: #17243a;
+}
+
+.thumb-placeholder {
+  display: grid;
+  place-items: center;
+  color: #9bb4d8;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.card { overflow: hidden; }
+
+.cardbody { padding: 13px; }
+
+.tag {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #1b3152;
+  color: #9cc4ff;
+  font-size: 12px;
+}
+
+.card h3 {
+  margin: 10px 0 7px;
+  overflow-wrap: anywhere;
+}
+
+.time {
+  margin-top: 8px;
+  color: #93a9c8;
+  font-size: 12px;
+}
+
+.code {
+  margin-top: 12px;
+  padding: 12px;
+  overflow: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #080d18;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+#status {
+  color: #9cc4ff;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.bottom-nav {
+  position: fixed;
+  z-index: 20;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 3px;
+  padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+  background: #0d1628;
+  border-top: 1px solid var(--line);
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 2px;
+  color: #a6b5cb;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.nav-btn.active {
+  color: #8db8ff;
+  background: #172944;
+}
+
+.nav-btn.active .icon { color: #8db8ff; }
+
+.icon {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-btn .icon { width: 22px; height: 22px; }
+
+.owner .icon { width: 23px; height: 23px; }
+
+.profile-header {
+  padding: 18px 0 10px;
+}
+
+.profile-header h2 { margin: 0 0 7px; }
+
+.profile-menu {
+  margin-top: 18px;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 13px;
+  padding: 16px 14px;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.profile-item:last-child { border-bottom: 0; }
+
+.profile-item:hover { background: #17243a; }
+
+.profile-item > .icon {
+  width: 22px;
+  height: 22px;
+  color: #8db8ff;
+}
+
+.profile-item .item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-item .item-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-item .item-description {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.profile-item .chevron {
+  width: 17px;
+  height: 17px;
+  color: #7d91ad;
+}
+
+.profile-content {
+  margin-top: 18px;
+}
+
+.profile-content h3 { margin-top: 0; }
+
+.socials {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.social-link:last-child { border-bottom: 0; }
+.social-link:hover { background: #17243a; }
+.social-link .icon { color: #8db8ff; }
+
+footer {
+  padding: 22px 10px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width:520px) {
+  header { padding: 11px; }
+  .fields { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .searchbar { gap: 7px; }
+  .searchbar .btn { padding: 10px; }
+  .section-title h2 { font-size: 17px; }
+  .grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
+
 <body>
+
+<!-- Reusable outline icons -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-home" viewBox="0 0 24 24">
+    <path d="m3 10 9-7 9 7"/>
+    <path d="M5 9v12h14V9M9 21v-7h6v7"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="10.8" cy="10.8" r="7.2"/>
+    <path d="m16 16 5 5"/>
+  </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 21a8 8 0 0 1 16 0"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M12 11v5M12 8h.01"/>
+  </symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M20.8 8.7c0 5.1-8.8 10.1-8.8 10.1S3.2 13.8 3.2 8.7a4.7 4.7 0 0 1 8.8-2.2 4.7 4.7 0 0 1 8.8 2.2Z"/>
+  </symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24">
+    <path d="M6 3.5h12v17l-6-4-6 4z"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M12 7v5l3 2"/>
+  </symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="m19.4 15 .1.1 1.2 1-1.5 2.6-1.5-.5a7.8 7.8 0 0 1-1.8 1l-.3 1.6h-3l-.3-1.6a7.8 7.8 0 0 1-1.8-1l-1.5.5-1.5-2.6 1.2-1a7.5 7.5 0 0 1 0-2l-1.2-1 1.5-2.6 1.5.5a7.8 7.8 0 0 1 1.8-1l.3-1.6h3l.3 1.6a7.8 7.8 0 0 1 1.8 1l1.5-.5 1.5 2.6-1.2 1a7.5 7.5 0 0 1 0 2Z" transform="translate(-1 -1)"/>
+  </symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24">
+    <path d="m9 18 6-6-6-6"/>
+  </symbol>
+  <symbol id="i-user-round" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M5 21v-1a7 7 0 0 1 14 0v1"/>
+  </symbol>
+  <symbol id="i-log-out" viewBox="0 0 24 24">
+    <path d="M10 17l5-5-5-5M15 12H3"/>
+    <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+  </symbol>
+  <symbol id="i-code" viewBox="0 0 24 24">
+    <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>
+  </symbol>
+</svg>
+
 <header>
-<div>
-<div class="logo">KVAN <span>SCRIPT</span></div>
-<div class="tagline">Discover • View • Copy Roblox Scripts</div>
-</div>
-<button class="owner" id="ownerEntry">
-<span class="person">♙</span>
-<span class="creator">Creator by</span>
-<span class="kvan">KVAN</span>
-</button>
+  <div>
+    <div class="logo">KVAN <span>SCRIPT</span></div>
+    <div class="tagline">Discover · View · Copy Roblox Scripts</div>
+  </div>
+
+  <button class="owner" id="ownerEntry" type="button" aria-label="Owner login">
+    <svg class="icon"><use href="#i-user-round"/></svg>
+    <span class="creator">Creator by</span>
+    <span class="kvan">KVAN</span>
+  </button>
 </header>
 
 <main>
-<section id="homePage">
-<div class="searchbar">
-<input id="search" placeholder="Search scripts or games...">
-<button id="searchGo">Search</button>
-</div>
 
-<section id="loginPanel" class="panel hidden">
-<h2>Owner Login</h2>
-<p class="muted">Sign in using the owner email and password.</p>
-<div class="fields">
-<input id="email" type="email" placeholder="Owner email">
-<input id="password" type="password" placeholder="Password">
-</div>
-<div class="actions">
-<button id="loginBtn">Log In</button>
-<button id="logoutBtn" class="secondary hidden">Log Out</button>
-</div>
-</section>
+  <!-- HOME / SEARCH -->
+  <section id="homePage">
+    <div class="searchbar">
+      <input id="search" type="search" placeholder="Search scripts or games..." aria-label="Search scripts">
+      <button class="btn" id="searchGo" type="button">
+        <svg class="icon"><use href="#i-search"/></svg>
+        Search
+      </button>
+    </div>
 
-<section id="adminPanel" class="panel hidden">
-<h2 id="formHeading">Add a Script</h2>
-<form id="scriptForm" class="fields">
-<input id="scriptName" placeholder="Script name" required>
-<input id="gameName" placeholder="Game name" required>
-<input id="category" placeholder="Category" required>
-<input id="thumbnail" type="url" placeholder="Direct thumbnail image URL (optional)">
-<textarea id="scriptCode" class="full" placeholder="Paste script code here..." required></textarea>
-<div class="actions full">
-<button id="publishBtn">Publish Script</button>
-<button type="button" id="cancelEdit" class="secondary hidden">Cancel Edit</button>
-</div>
-</form>
-</section>
+    <!-- Owner login -->
+    <section id="loginPanel" class="panel hidden">
+      <h2>Owner Login</h2>
+      <p class="muted">Sign in with the owner email and password.</p>
 
-<p id="status">Loading scripts...</p>
+      <div class="fields">
+        <input id="email" type="email" autocomplete="username" placeholder="Owner email">
+        <input id="password" type="password" autocomplete="current-password" placeholder="Password">
+      </div>
 
-<div class="section-title">
-<h2>Newly Added</h2><span>Latest 6</span>
-</div>
-<section id="newGrid" class="grid"></section>
+      <div class="actions">
+        <button class="btn" id="loginBtn" type="button">Log In</button>
+        <button class="btn btn-secondary hidden" id="logoutBtn" type="button">Log Out</button>
+      </div>
+    </section>
 
-<div class="section-title">
-<h2>Most Liked</h2><span>Like ranking will be connected next</span>
-</div>
-<section id="likedGrid" class="grid"></section>
+    <!-- Owner script manager -->
+    <section id="adminPanel" class="panel hidden">
+      <h2 id="formHeading">Add a Script</h2>
 
-<div class="section-title">
-<h2>All Scripts</h2><span id="allCount"></span>
-</div>
-<section id="scriptGrid" class="grid"></section>
-</section>
+      <form id="scriptForm" class="fields">
+        <input id="scriptName" placeholder="Script name" required>
+        <input id="gameName" placeholder="Game name" required>
+        <input id="category" placeholder="Category" required>
+        <input id="thumbnail" type="url" placeholder="Direct thumbnail URL (optional)">
+        <textarea id="scriptCode" class="full" placeholder="Paste script code here..." required></textarea>
 
-<section id="profilePage" class="hidden">
-<div class="section-title"><h2>Profile</h2></div>
-<section class="panel">
-<h2>Your Profile</h2>
-<p id="profileHint" class="muted">Browsing and copying works without login. Like and Save will require a user account.</p>
-<div class="profile-actions">
-<button class="secondary" data-profile="liked">♥ Liked</button>
-<button class="secondary" data-profile="saved">★ Saved</button>
-<button class="secondary" data-profile="recent">◷ Recently Viewed</button>
-<button class="secondary" data-profile="settings">⚙ Settings</button>
-</div>
-</section>
-<section id="profileContent" class="grid"></section>
-</section>
+        <div class="actions full">
+          <button class="btn" id="publishBtn" type="submit">Publish Script</button>
+          <button class="btn btn-secondary hidden" id="cancelEdit" type="button">Cancel Edit</button>
+        </div>
+      </form>
+    </section>
 
-<section id="creatorPage" class="hidden">
-<div class="section-title"><h2>Creator Details</h2></div>
-<section class="panel">
-<h2>Creator by KVAN</h2>
-<p class="muted">Official social links and contact details.</p>
-<div id="socialList" class="socials"></div>
-<p id="socialHint" class="muted">Owner-editable social links will be connected in a later step.</p>
-</section>
-</section>
+    <p id="status" role="status">Loading scripts...</p>
+
+    <div class="section-title">
+      <h2>Newly Added</h2>
+      <span>Latest 6</span>
+    </div>
+    <section id="newGrid" class="grid"></section>
+
+    <div class="section-title">
+      <h2>Most Liked</h2>
+      <span>Coming soon</span>
+    </div>
+    <section id="likedGrid" class="grid"></section>
+
+    <div class="section-title">
+      <h2>All Scripts</h2>
+      <span id="allCount"></span>
+    </div>
+    <section id="scriptGrid" class="grid"></section>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profilePage" class="hidden">
+    <div class="profile-header">
+      <h2>Profile</h2>
+      <p class="muted">Manage your activity and account.</p>
+    </div>
+
+    <section class="profile-menu">
+      <button class="profile-item" type="button" data-profile="liked">
+        <svg class="icon"><use href="#i-heart"/></svg>
+        <span class="item-text">
+          <span class="item-title">Liked Scripts</span>
+          <span class="item-description">Scripts you have liked</span>
+        </span>
+        <svg class="icon chevron"><use href="#i-chevron"/></svg>
+      </button>
+
+      <button class="profile-item" type="button" data-profile="saved">
+        <svg class="icon"><use href="#i-bookmark"/></svg>
+        <span class="item-text">
+          <span class="item-title">Saved Scripts</span>
+          <span class="item-description">Scripts saved for later</span>
+        </span>
+        <svg class="icon chevron"><use href="#i-chevron"/></svg>
+      </button>
+
+      <button class="profile-item" type="button" data-profile="recent">
+        <svg class="icon"><use href="#i-clock"/></svg>
+        <span class="item-text">
+          <span class="item-title">Recently Viewed</span>
+          <span class="item-description">Scripts you opened recently</span>
+        </span>
+        <svg class="icon chevron"><use href="#i-chevron"/></svg>
+      </button>
+
+      <button class="profile-item" type="button" data-profile="settings">
+        <svg class="icon"><use href="#i-settings"/></svg>
+        <span class="item-text">
+          <span class="item-title">Settings</span>
+          <span class="item-description">Account and sign-in information</span>
+        </span>
+        <svg class="icon chevron"><use href="#i-chevron"/></svg>
+      </button>
+    </section>
+
+    <section id="profileContent" class="profile-content"></section>
+  </section>
+
+  <!-- CREATOR DETAILS -->
+  <section id="creatorPage" class="hidden">
+    <div class="section-title">
+      <h2>Creator Details</h2>
+    </div>
+
+    <section class="panel">
+      <h2>Creator by KVAN</h2>
+      <p class="muted">Official social links and contact information.</p>
+
+      <div id="socialList" class="socials"></div>
+
+      <p class="muted">Social links can be configured in a future update.</p>
+    </section>
+  </section>
+
 </main>
 
 <footer>KVAN SCRIPT © 2026</footer>
 
-<nav class="bottom-nav">
-<button class="nav-btn active" data-page="home"><span class="ico">⌂</span>Home</button>
-<button class="nav-btn" data-page="search"><span class="ico">⌕</span>Search</button>
-<button class="nav-btn" data-page="profile"><span class="ico">♙</span>Profile</button>
-<button class="nav-btn" data-page="creator"><span class="ico">ⓘ</span>Creator Details</button>
+<!-- Bottom navigation -->
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button class="nav-btn active" data-page="home" type="button">
+    <svg class="icon"><use href="#i-home"/></svg>
+    <span>Home</span>
+  </button>
+
+  <button class="nav-btn" data-page="search" type="button">
+    <svg class="icon"><use href="#i-search"/></svg>
+    <span>Search</span>
+  </button>
+
+  <button class="nav-btn" data-page="profile" type="button">
+    <svg class="icon"><use href="#i-user"/></svg>
+    <span>Profile</span>
+  </button>
+
+  <button class="nav-btn" data-page="creator" type="button">
+    <svg class="icon"><use href="#i-info"/></svg>
+    <span>Creator Details</span>
+  </button>
 </nav>
 
 <script>
-const SUPABASE_URL="https://xfevvgiqezbwimutjkyu.supabase.co";
-const SUPABASE_KEY="sb_publishable_0N5QfJ3en7QDyyo4oEBiNQ_WXYk0RBU";
-const OWNER_UID="53a31555-be18-47e7-a9d4-ae51bd0de554";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+"use strict";
 
-let currentUser=null,scripts=[],editingId=null;
-const $=id=>document.getElementById(id);
-const status=m=>$("status").textContent=m;
+/* Supabase configuration */
+const SUPABASE_URL = "https://xfevvgiqezbwimutjkyu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_0N5QfJ3en7QDyyo4oEBiNQ_WXYk0RBU";
+const OWNER_UID = "53a31555-be18-47e7-a9d4-ae51bd0de554";
 
-function esc(v){
-return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let scripts = [];
+let editingId = null;
+
+const $ = id => document.getElementById(id);
+
+function setStatus(message) {
+  $("status").textContent = message;
 }
 
-function safeImage(u){
-try{
-let p=new URL(u);
-return ["https:","http:"].includes(p.protocol)?p.href:"";
-}catch{return ""}
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
 }
 
-function ago(d){
-if(!d)return "";
-let n=Math.max(0,Math.floor((Date.now()-new Date(d).getTime())/1000));
-if(n<60)return "Just now";
-if(n<3600)return Math.floor(n/60)+"m ago";
-if(n<86400)return Math.floor(n/3600)+"h ago";
-if(n<604800)return Math.floor(n/86400)+"d ago";
-return new Date(d).toLocaleDateString();
+function safeImageURL(value) {
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) ? url.href : "";
+  } catch {
+    return "";
+  }
 }
 
-function owner(){
-return !!currentUser&&currentUser.id===OWNER_UID;
+function timeAgo(dateValue) {
+  if (!dateValue) return "";
+
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+
+  if (seconds < 60) return "Just now";
+  if (seconds < 3600) return Math.floor(seconds / 60) + "m ago";
+  if (seconds < 86400) return Math.floor(seconds / 3600) + "h ago";
+  if (seconds < 604800) return Math.floor(seconds / 86400) + "d ago";
+
+  return date.toLocaleDateString();
 }
 
-async function loadScripts(){
-status("Loading scripts...");
-let {data,error}=await client.from("scripts").select("*").order("created_at",{ascending:false});
-if(error){status("Could not load scripts: "+error.message);return}
-scripts=data||[];
-renderAll();
+function isOwner() {
+  return Boolean(currentUser && currentUser.id === OWNER_UID);
 }
 
-function card(s){
-let el=document.createElement("article");
-el.className="card";
-let img=safeImage(s.thumbnail_url);
+function setPage(page) {
+  $("homePage").classList.toggle("hidden", !["home", "search"].includes(page));
+  $("profilePage").classList.toggle("hidden", page !== "profile");
+  $("creatorPage").classList.toggle("hidden", page !== "creator");
 
-el.innerHTML=`${img?`<img class="thumb" src="${esc(img)}" alt="${esc(s.script_name)} thumbnail" loading="lazy">`:`<div class="thumb" style="display:grid;place-items:center;color:#9bb4d8">KVAN SCRIPT</div>`}
-<div class="cardbody">
-<span class="tag">${esc(s.category)}</span>
-<h3>${esc(s.script_name)}</h3>
-<div class="muted">Game: ${esc(s.game_name)}</div>
-<div class="time">${ago(s.created_at)}</div>
-<div class="actions"><button class="view">View Code</button><button class="copy">Copy Code</button></div>
-${owner()?`<div class="actions"><button class="edit secondary">Edit</button><button class="delete danger">Delete</button></div>`:""}
-<pre class="code hidden"></pre>
-</div>`;
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
 
-let pre=el.querySelector(".code");
-pre.textContent=s.script_code||"";
-
-el.querySelector(".view").onclick=()=>{
-pre.classList.toggle("hidden");
-let key="kvan_recent_"+(currentUser?.id||"guest");
-let ids=JSON.parse(localStorage.getItem(key)||"[]").filter(x=>String(x)!==String(s.id));
-ids.unshift(s.id);
-localStorage.setItem(key,JSON.stringify(ids.slice(0,30)));
-};
-
-el.querySelector(".copy").onclick=async e=>{
-try{
-await navigator.clipboard.writeText(s.script_code||"");
-e.currentTarget.textContent="Copied!";
-setTimeout(()=>e.currentTarget.textContent="Copy Code",1200);
-}catch{
-pre.classList.remove("hidden");
-status("Code shown. Select and copy manually.");
-}
-};
-
-let edit=el.querySelector(".edit");
-if(edit)edit.onclick=()=>{
-editingId=s.id;
-$("scriptName").value=s.script_name;
-$("gameName").value=s.game_name;
-$("category").value=s.category;
-$("thumbnail").value=s.thumbnail_url||"";
-$("scriptCode").value=s.script_code||"";
-$("formHeading").textContent="Edit Script";
-$("publishBtn").textContent="Save Changes";
-$("cancelEdit").classList.remove("hidden");
-$("adminPanel").scrollIntoView({behavior:"smooth"});
-};
-
-let del=el.querySelector(".delete");
-if(del)del.onclick=async()=>{
-if(!confirm("Delete this script?"))return;
-let {error}=await client.from("scripts").delete().eq("id",s.id);
-if(error){status("Delete failed: "+error.message);return}
-await loadScripts();
-};
-
-return el;
+  if (page === "search") $("search").focus();
+  if (page === "profile") showProfile("liked");
 }
 
-function fill(id,rows){
-let e=$(id);
-e.innerHTML="";
-rows.forEach(s=>e.appendChild(card(s)));
+/* Load script records */
+async function loadScripts() {
+  setStatus("Loading scripts...");
+
+  const { data, error } = await client
+    .from("scripts")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    setStatus("Could not load scripts. Please try again.");
+    console.error(error);
+    return;
+  }
+
+  scripts = data || [];
+  renderScripts();
 }
 
-function renderAll(){
-let t=$("search").value.trim().toLowerCase();
-let rows=scripts.filter(s=>[s.script_name,s.game_name,s.category].some(v=>String(v||"").toLowerCase().includes(t)));
-fill("newGrid",rows.slice(0,6));
-fill("likedGrid",rows.slice(0,6));
-fill("scriptGrid",rows);
-$("allCount").textContent=rows.length+" scripts";
-status(rows.length?rows.length+" script(s) found.":"No scripts published yet.");
-$("adminPanel").classList.toggle("hidden",!owner());
+/* Build a script card */
+function createScriptCard(script) {
+  const article = document.createElement("article");
+  article.className = "card";
+
+  const imageURL = safeImageURL(script.thumbnail_url);
+
+  article.innerHTML = `
+    ${imageURL
+      ? `<img class="thumb" src="${escapeHTML(imageURL)}" alt="${escapeHTML(script.script_name)} thumbnail" loading="lazy">`
+      : `<div class="thumb thumb-placeholder">KVAN SCRIPT</div>`
+    }
+    <div class="cardbody">
+      <span class="tag">${escapeHTML(script.category)}</span>
+      <h3>${escapeHTML(script.script_name)}</h3>
+      <div class="muted">Game: ${escapeHTML(script.game_name)}</div>
+      <div class="time">${escapeHTML(timeAgo(script.created_at))}</div>
+
+      <div class="actions">
+        <button class="btn viewBtn" type="button">View Code</button>
+        <button class="btn btn-secondary copyBtn" type="button">Copy Code</button>
+      </div>
+
+      ${isOwner() ? `
+        <div class="actions">
+          <button class="btn btn-secondary editBtn" type="button">Edit</button>
+          <button class="btn btn-danger deleteBtn" type="button">Delete</button>
+        </div>
+      ` : ""}
+
+      <pre class="code hidden"></pre>
+    </div>
+  `;
+
+  const codeElement = article.querySelector(".code");
+  codeElement.textContent = script.script_code || "";
+
+  article.querySelector(".viewBtn").addEventListener("click", () => {
+    codeElement.classList.toggle("hidden");
+
+    const storageKey = "kvan_recent_" + (currentUser?.id || "guest");
+    let recent = [];
+
+    try {
+      recent = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      if (!Array.isArray(recent)) recent = [];
+    } catch {
+      recent = [];
+    }
+
+    recent = recent.filter(id => String(id) !== String(script.id));
+    recent.unshift(script.id);
+
+    localStorage.setItem(storageKey, JSON.stringify(recent.slice(0, 30)));
+  });
+
+  article.querySelector(".copyBtn").addEventListener("click", async event => {
+    try {
+      await navigator.clipboard.writeText(script.script_code || "");
+      event.currentTarget.textContent = "Copied!";
+      setTimeout(() => {
+        event.currentTarget.textContent = "Copy Code";
+      }, 1200);
+    } catch {
+      codeElement.classList.remove("hidden");
+      setStatus("Select the displayed code and copy it manually.");
+    }
+  });
+
+  const editButton = article.querySelector(".editBtn");
+
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      editingId = script.id;
+
+      $("scriptName").value = script.script_name || "";
+      $("gameName").value = script.game_name || "";
+      $("category").value = script.category || "";
+      $("thumbnail").value = script.thumbnail_url || "";
+      $("scriptCode").value = script.script_code || "";
+
+      $("formHeading").textContent = "Edit Script";
+      $("publishBtn").textContent = "Save Changes";
+      $("cancelEdit").classList.remove("hidden");
+
+      $("adminPanel").scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  const deleteButton = article.querySelector(".deleteBtn");
+
+  if (deleteButton) {
+    deleteButton.addEventListener("click", async () => {
+      if (!isOwner()) return;
+      if (!confirm("Delete this script?")) return;
+
+      const { error } = await client
+        .from("scripts")
+        .delete()
+        .eq("id", script.id);
+
+      if (error) {
+        setStatus("Delete failed. Please try again.");
+        console.error(error);
+        return;
+      }
+
+      await loadScripts();
+      setStatus("Script deleted.");
+    });
+  }
+
+  return article;
 }
 
-$("ownerEntry").onclick=()=>$("loginPanel").classList.toggle("hidden");
+function fillGrid(elementId, rows) {
+  const container = $(elementId);
+  container.replaceChildren();
 
-$("loginBtn").onclick=async()=>{
-let {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
-if(error){status("Login failed: "+error.message);return}
-currentUser=data.user;
-if(!owner()){
-await client.auth.signOut();
-currentUser=null;
-status("This account is not the site owner.");
-return;
-}
-$("loginPanel").classList.add("hidden");
-$("logoutBtn").classList.remove("hidden");
-$("loginBtn").classList.add("hidden");
-$("email").disabled=true;
-$("password").disabled=true;
-status("Owner logged in.");
-renderAll();
-};
-
-$("logoutBtn").onclick=async()=>{
-let {error}=await client.auth.signOut();
-if(error){status("Logout failed: "+error.message);return}
-currentUser=null;
-$("email").disabled=false;
-$("password").disabled=false;
-$("loginBtn").classList.remove("hidden");
-$("logoutBtn").classList.add("hidden");
-$("loginPanel").classList.add("hidden");
-renderAll();
-};
-
-$("scriptForm").onsubmit=async e=>{
-e.preventDefault();
-if(!owner()){status("Please log in as owner.");return}
-
-let row={
-script_name:$("scriptName").value.trim(),
-game_name:$("gameName").value.trim(),
-category:$("category").value.trim(),
-thumbnail_url:$("thumbnail").value.trim()||null,
-script_code:$("scriptCode").value
-};
-
-let result=editingId
-?await client.from("scripts").update(row).eq("id",editingId)
-:await client.from("scripts").insert(row);
-
-if(result.error){status("Save failed: "+result.error.message);return}
-
-$("scriptForm").reset();
-editingId=null;
-$("formHeading").textContent="Add a Script";
-$("publishBtn").textContent="Publish Script";
-$("cancelEdit").classList.add("hidden");
-await loadScripts();
-status("Script saved successfully.");
-};
-
-$("cancelEdit").onclick=()=>{
-$("scriptForm").reset();
-editingId=null;
-$("formHeading").textContent="Add a Script";
-$("publishBtn").textContent="Publish Script";
-$("cancelEdit").classList.add("hidden");
-};
-
-function switchPage(p){
-$("homePage").classList.toggle("hidden",p!=="home"&&p!=="search");
-$("profilePage").classList.toggle("hidden",p!=="profile");
-$("creatorPage").classList.toggle("hidden",p!=="creator");
-document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
-if(p==="search")$("search").focus();
-if(p==="profile")profile("liked");
+  rows.forEach(script => {
+    container.appendChild(createScriptCard(script));
+  });
 }
 
-document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>switchPage(b.dataset.page));
-$("search").addEventListener("input",renderAll);
-$("searchGo").onclick=()=>{
-switchPage("search");
-$("search").focus();
-renderAll();
-};
+function renderScripts() {
+  const term = $("search").value.trim().toLowerCase();
 
-function profile(which){
-let out=$("profileContent");
-out.innerHTML="";
+  const filtered = scripts.filter(script => [
+    script.script_name,
+    script.game_name,
+    script.category
+  ].some(value => String(value || "").toLowerCase().includes(term)));
 
-if(which==="settings"){
-out.innerHTML=`<section class="panel"><h3>Account Settings</h3><p class="muted">${currentUser?"Signed in: "+esc(currentUser.email||"user"):"Login is required for account features."}</p></section>`;
-return;
+  fillGrid("newGrid", filtered.slice(0, 6));
+
+  /* Placeholder until a real likes table is connected */
+  fillGrid("likedGrid", filtered.slice(0, 6));
+
+  fillGrid("scriptGrid", filtered);
+  $("allCount").textContent = filtered.length + " scripts";
+
+  $("adminPanel").classList.toggle("hidden", !isOwner());
+
+  setStatus(filtered.length
+    ? filtered.length + " script(s) found."
+    : "No scripts found.");
 }
 
-if(which==="recent"){
-let ids=JSON.parse(localStorage.getItem("kvan_recent_"+(currentUser?.id||"guest"))||"[]");
-let rows=ids.map(id=>scripts.find(s=>String(s.id)===String(id))).filter(Boolean);
-if(!rows.length)out.innerHTML='<p class="muted">No recently viewed scripts yet.</p>';
-else rows.forEach(s=>out.appendChild(card(s)));
-return;
+/* Owner login */
+$("ownerEntry").addEventListener("click", () => {
+  $("loginPanel").classList.toggle("hidden");
+});
+
+$("loginBtn").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if (!email || !password) {
+    setStatus("Enter the owner email and password.");
+    return;
+  }
+
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    setStatus("Login failed. Check your email and password.");
+    return;
+  }
+
+  if (!data.user || data.user.id !== OWNER_UID) {
+    await client.auth.signOut();
+    currentUser = null;
+    setStatus("This account is not the site owner.");
+    return;
+  }
+
+  currentUser = data.user;
+  $("loginPanel").classList.add("hidden");
+  $("logoutBtn").classList.remove("hidden");
+  $("loginBtn").classList.add("hidden");
+  $("email").disabled = true;
+  $("password").disabled = true;
+
+  await loadScripts();
+  setStatus("Owner logged in.");
+});
+
+/* Logout */
+$("logoutBtn").addEventListener("click", async () => {
+  const { error } = await client.auth.signOut();
+
+  if (error) {
+    setStatus("Logout failed.");
+    return;
+  }
+
+  currentUser = null;
+  $("email").disabled = false;
+  $("password").disabled = false;
+  $("loginBtn").classList.remove("hidden");
+  $("logoutBtn").classList.add("hidden");
+  $("loginPanel").classList.add("hidden");
+
+  await loadScripts();
+  setStatus("Logged out.");
+});
+
+/* Add or edit a script */
+$("scriptForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!isOwner()) {
+    setStatus("Please log in as the owner.");
+    return;
+  }
+
+  const record = {
+    script_name: $("scriptName").value.trim(),
+    game_name: $("gameName").value.trim(),
+    category: $("category").value.trim(),
+    thumbnail_url: $("thumbnail").value.trim() || null,
+    script_code: $("scriptCode").value
+  };
+
+  const result = editingId
+    ? await client.from("scripts").update(record).eq("id", editingId)
+    : await client.from("scripts").insert(record);
+
+  if (result.error) {
+    setStatus("Could not save the script. Please try again.");
+    console.error(result.error);
+    return;
+  }
+
+  resetScriptForm();
+  await loadScripts();
+  setStatus("Script saved successfully.");
+});
+
+function resetScriptForm() {
+  $("scriptForm").reset();
+  editingId = null;
+  $("formHeading").textContent = "Add a Script";
+  $("publishBtn").textContent = "Publish Script";
+  $("cancelEdit").classList.add("hidden");
 }
 
-out.innerHTML=`<p class="muted">${which==="liked"?"Liked scripts":"Saved scripts"} will be connected to secure user accounts in the next setup step.</p>`;
+$("cancelEdit").addEventListener("click", resetScriptForm);
+
+/* Navigation */
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => setPage(button.dataset.page));
+});
+
+$("search").addEventListener("input", renderScripts);
+
+$("searchGo").addEventListener("click", () => {
+  setPage("search");
+  renderScripts();
+});
+
+/* Profile menus */
+function showProfile(section) {
+  const content = $("profileContent");
+  content.replaceChildren();
+
+  if (section === "settings") {
+    const panel = document.createElement("section");
+    panel.className = "panel";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Account Settings";
+
+    const description = document.createElement("p");
+    description.className = "muted";
+    description.textContent = currentUser
+      ? "Signed in as " + (currentUser.email || "user")
+      : "You are browsing as a guest. Sign-in features are not yet connected for regular users.";
+
+    panel.append(heading, description);
+
+    if (isOwner()) {
+      const logout = document.createElement("button");
+      logout.className = "btn btn-secondary";
+      logout.textContent = "Log Out";
+      logout.addEventListener("click", () => $("logoutBtn").click());
+      panel.appendChild(logout);
+    }
+
+    content.appendChild(panel);
+    return;
+  }
+
+  if (section === "recent") {
+    const storageKey = "kvan_recent_" + (currentUser?.id || "guest");
+    let ids = [];
+
+    try {
+      ids = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      if (!Array.isArray(ids)) ids = [];
+    } catch {
+      ids = [];
+    }
+
+    const recentScripts = ids
+      .map(id => scripts.find(script => String(script.id) === String(id)))
+      .filter(Boolean);
+
+    if (!recentScripts.length) {
+      const message = document.createElement("p");
+      message.className = "muted";
+      message.textContent = "No recently viewed scripts yet.";
+      content.appendChild(message);
+      return;
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "grid";
+
+    recentScripts.forEach(script => {
+      grid.appendChild(createScriptCard(script));
+    });
+
+    content.appendChild(grid);
+    return;
+  }
+
+  const panel = document.createElement("section");
+  panel.className = "panel";
+
+  const heading = document.createElement("h3");
+  heading.textContent = section === "liked" ? "Liked Scripts" : "Saved Scripts";
+
+  const message = document.createElement("p");
+  message.className = "muted";
+  message.textContent = "This feature will be available after the secure user account and database setup is completed.";
+
+  panel.append(heading, message);
+  content.appendChild(panel);
 }
 
-document.querySelectorAll("[data-profile]").forEach(b=>b.onclick=()=>profile(b.dataset.profile));
+document.querySelectorAll("[data-profile]").forEach(button => {
+  button.addEventListener("click", () => showProfile(button.dataset.profile));
+});
 
-$("socialList").innerHTML=["YouTube","Telegram","Discord","Email","TikTok","Facebook"].map(n=>`<div class="social-link">${n} — not set yet</div>`).join("");
+/* Creator details placeholders */
+const socialNames = [
+  "YouTube",
+  "Telegram",
+  "Discord",
+  "Email",
+  "TikTok",
+  "Facebook"
+];
 
-(async()=>{
-let {data}=await client.auth.getSession();
-currentUser=data.session?.user||null;
-if(!owner())currentUser=null;
-if(currentUser){
-$("logoutBtn").classList.remove("hidden");
-$("loginBtn").classList.add("hidden");
-$("email").disabled=true;
-$("password").disabled=true;
+$("socialList").replaceChildren();
+
+socialNames.forEach(name => {
+  const row = document.createElement("div");
+  row.className = "social-link";
+
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("class", "icon");
+
+  const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+  use.setAttribute("href", "#i-info");
+  icon.appendChild(use);
+
+  const label = document.createElement("span");
+  label.textContent = name + " — not set yet";
+
+  row.append(icon, label);
+  $("socialList").appendChild(row);
+});
+
+/* Restore owner session and load content */
+async function initialize() {
+  const { data, error } = await client.auth.getSession();
+
+  if (!error && data.session?.user?.id === OWNER_UID) {
+    currentUser = data.session.user;
+    $("logoutBtn").classList.remove("hidden");
+    $("loginBtn").classList.add("hidden");
+    $("email").disabled = true;
+    $("password").disabled = true;
+  } else {
+    currentUser = null;
+  }
+
+  await loadScripts();
 }
-await loadScripts();
-})();
+
+initialize();
 </script>
+
 </body>
 </html>
